@@ -1,0 +1,41 @@
+{
+  "name": "@convex-dev/browser-use",
+  "version": "0.1.0",
+  "description": "Browser Use Convex Component — durable browser automation with zero polling",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "convex": "./convex.config.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./convex.config": "./convex.config.ts"
+  },
+  "files": [
+    "dist",
+    "convex",
+    "convex.config.ts",
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "convex",
+    "browser-use",
+    "browser-automation",
+    "component",
+    "durable",
+    "reactive"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MaybeManne/ConvexComponent"
+  },
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "convex": ">=1.17.0"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "browser-use-convex-component",
+  "version": "0.1.0",
+  "description": "Browser Use Convex Component — durable browser automation with zero polling. Includes MERIDIAN example app.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --trace-warnings server.mjs",
+    "sweep": "node apis/briefing.mjs",
+    "inject": "node dashboard/inject.mjs",
+    "brief": "node apis/briefing.mjs",
+    "brief:save": "node apis/save-briefing.mjs",
+    "diag": "node diag.mjs",
+    "clean": "node scripts/clean.mjs",
+    "fresh-start": "npm run clean && npm start",
+    "dev:meridian": "concurrently \"node server.mjs\" \"cd meridian-app && npx convex dev\" \"cd meridian-app && npx next dev -p 3118\""
+  },
+  "keywords": [
+    "convex",
+    "browser-use",
+    "browser-automation",
+    "component",
+    "intelligence",
+    "osint"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  },
+  "dependencies": {
+    "concurrently": "^9.2.1",
+    "convex": "^1.34.0",
+    "express": "^5.1.0"
+  },
+  "optionalDependencies": {
+    "discord.js": "^14.25.1"
+  },
+  "overrides": {
+    "undici": "^7.24.4"
+  }
+}

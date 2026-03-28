@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MERIDIAN — Loading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0a0a;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Animated background grid */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: grid-shift 20s linear infinite;
+    }
+    @keyframes grid-shift {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(48px); }
+    }
+
+    /* Meridian globe logo */
+    .logo-wrap {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin-bottom: 32px;
+    }
+    .logo-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+      animation: ring-pulse 3s ease-in-out infinite;
+    }
+    .logo-ring:nth-child(2) {
+      inset: -12px;
+      animation-delay: 0.5s;
+      opacity: 0.6;
+    }
+    .logo-ring:nth-child(3) {
+      inset: -24px;
+      animation-delay: 1s;
+      opacity: 0.3;
+    }
+    @keyframes ring-pulse {
+      0%, 100% { opacity: 0.1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.05); }
+    }
+    .logo-svg {
+      width: 80px;
+      height: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Title */
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: #555;
+      font-family: 'JetBrains Mono';
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    /* Progress section */
+    .progress-wrap {
+      width: 320px;
+      margin-bottom: 24px;
+    }
+    .progress-track {
+      width: 100%;
+      height: 2px;
+      background: #1a1a1a;
+      border-radius: 1px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      border-radius: 1px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* Source list */
+    .sources-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      width: 320px;
+      margin-bottom: 32px;
+    }
+    .source-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #333;
+      font-family: 'JetBrains Mono';
+      transition: color 0.3s;
+    }
+    .source-item.active { color: #888; }
+    .source-item.done { color: #22c55e; }
+    .source-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #222;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .source-item.active .source-dot {
+      background: #3b82f6;
+      animation: pulse-dot 1s infinite;
+    }
+    .source-item.done .source-dot { background: #22c55e; }
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* Status text */
+    .status-text {
+      font-size: 11px;
+      color: #333;
+      font-family: 'JetBrains Mono';
+      height: 16px;
+      text-align: center;
+    }
+    .status-text.active { color: #555; }
+
+    /* ETA */
+    .eta {
+      position: fixed;
+      bottom: 32px;
+      font-size: 10px;
+      color: #222;
+      font-family: 'JetBrains Mono';
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .eta-bar {
+      width: 80px;
+      height: 2px;
+      background: #1a1a1a;
+      border-radius: 1px;
+      overflow: hidden;
+    }
+    .eta-fill {
+      height: 100%;
+      background: #333;
+      border-radius: 1px;
+      width: 0%;
+      transition: width 1s linear;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <div class="logo-wrap">
+    <div class="logo-ring"></div>
+    <div class="logo-ring"></div>
+    <div class="logo-ring"></div>
+    <svg class="logo-svg" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="30" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <line x1="40" y1="10" x2="40" y2="70" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+      <ellipse cx="40" cy="40" rx="14" ry="30" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="3 3"/>
+      <line x1="10" y1="40" x2="70" y2="40" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+      <circle cx="40" cy="40" r="3" fill="rgba(255,255,255,0.4)"/>
+    </svg>
+  </div>
+
+  <div class="title">MERIDIAN</div>
+  <div class="subtitle">Geopolitical Intelligence</div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="sources-grid" id="sourcesGrid"></div>
+
+  <div class="status-text" id="statusText">Initializing...</div>
+
+  <div class="eta">
+    <span id="etaText">First sweep</span>
+    <div class="eta-bar"><div class="eta-fill" id="etaFill"></div></div>
+    <span id="etaCountdown"></span>
+  </div>
+
+  <script>
+    const SOURCES = [
+      "OpenSky", "GDELT", "ACLED", "Reuters",
+      "EIA", "FRED", "Yahoo Finance", "CelesTrak",
+      "Safecast", "Maritime AIS", "OFAC", "WHO",
+      "NASA FIRMS", "Bluesky", "Reddit", "OSINT",
+      "OpenSanctions", "USAspending", "BLS", "NOAA",
+      "ReliefWeb", "EPA RadNet", "KiwiSDR", "GSCPI",
+      "UN Comtrade", "USPTO", "US Treasury", "HUMINT",
+    ];
+
+    const grid = document.getElementById('sourcesGrid');
+    const fill = document.getElementById('progressFill');
+    const statusEl = document.getElementById('statusText');
+    const etaCountdown = document.getElementById('etaCountdown');
+    const etaFill = document.getElementById('etaFill');
+    const etaText = document.getElementById('etaText');
+
+    // Render source items
+    grid.innerHTML = SOURCES.map((s, i) =>
+      '<div class="source-item" id="src-' + i + '">' +
+        '<div class="source-dot"></div>' +
+        '<span>' + s + '</span>' +
+      '</div>'
+    ).join('');
+
+    // Animate sources one by one
+    let completed = 0;
+    let sweepEstimate = 8;
+    let countdown = sweepEstimate;
+    let redirected = false;
+
+    // Get elapsed time from health endpoint
+    fetch('/api/health')
+      .then(function(r) { return r.json(); })
+      .then(function(h) {
+        if (h.sweepStartedAt) {
+          var elapsed = Math.floor((Date.now() - new Date(h.sweepStartedAt).getTime()) / 1000);
+          countdown = Math.max(0, sweepEstimate - elapsed);
+          // Stagger based on what's already elapsed
+          var remainingPct = countdown / sweepEstimate;
+          staggerActivation(remainingPct);
+        } else {
+          staggerActivation(1);
+        }
+        startCountdown();
+      })
+      .catch(function() {
+        staggerActivation(1);
+        startCountdown();
+      });
+
+    function staggerActivation(remainingPct) {
+      var totalMs = remainingPct * sweepEstimate * 1000;
+      var interval = totalMs / SOURCES.length;
+      SOURCES.forEach(function(_, i) {
+        setTimeout(function() { activateSource(i); }, i * interval);
+      });
+    }
+
+    function activateSource(index) {
+      if (redirected) return;
+      // Complete previous
+      if (index > 0) {
+        var prev = document.getElementById('src-' + (index - 1));
+        if (prev) {
+          prev.classList.remove('active');
+          prev.classList.add('done');
+        }
+      }
+
+      var item = document.getElementById('src-' + index);
+      if (item) {
+        item.classList.add('active');
+        statusEl.classList.add('active');
+        statusEl.textContent = 'Fetching ' + SOURCES[index] + '...';
+      }
+
+      var progress = ((index + 1) / SOURCES.length) * 100;
+      fill.style.width = progress + '%';
+      completed = index + 1;
+    }
+
+    function startCountdown() {
+      function tick() {
+        if (redirected) return;
+        countdown = Math.max(0, countdown - 1);
+        if (countdown > 0) {
+          etaCountdown.textContent = '~' + countdown + 's';
+          var pct = ((sweepEstimate - countdown) / sweepEstimate) * 100;
+          etaFill.style.width = Math.min(99, pct) + '%';
+        } else {
+          etaCountdown.textContent = '';
+          etaText.textContent = 'Finalizing';
+          etaFill.style.width = '99%';
+        }
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    // === SSE — wait for sweep to complete, then redirect ===
+    function goToDashboard() {
+      if (redirected) return;
+      redirected = true;
+      // Mark all done
+      SOURCES.forEach(function(_, i) {
+        var item = document.getElementById('src-' + i);
+        if (item) {
+          item.classList.remove('active');
+          item.classList.add('done');
+        }
+      });
+      fill.style.width = '100%';
+      etaFill.style.width = '100%';
+      statusEl.textContent = 'Intelligence ready. Loading dashboard...';
+      etaCountdown.textContent = '';
+      etaText.textContent = 'Ready';
+      setTimeout(function() { location.replace('/'); }, 300);
+    }
+
+    var es = new EventSource('/events');
+    es.onmessage = function(e) {
+      try {
+        var msg = JSON.parse(e.data);
+        if (msg.type === 'update') {
+          es.close();
+          goToDashboard();
+        }
+      } catch (err) {}
+    };
+    es.onerror = function() {
+      es.close();
+      setTimeout(function() { location.reload(); }, 3000);
+    };
+
+    // Fallback polling
+    setInterval(function() {
+      if (redirected) return;
+      fetch('/api/data').then(function(r) {
+        if (r.ok) goToDashboard();
+      }).catch(function() {});
+    }, 1000);
+  </script>
+</body>
+</html>
